@@ -1,0 +1,11 @@
+{
+  "name": "webtube",
+  "version": "1.0.0",
+  "description": "Clonnig Youtube with Vanila and NodeJS",
+  "main": "index.js",
+  "author": "Hasemi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
