@@ -1,7 +1,15 @@
-import {videos} from "../db";
+import Video from "../models/Video";
 import routes from "../routes";
 
-export const home = (req, res) => res.render("home", { pageTitle: "Home"  , videos}); //home.pug를 찾아감 1. 템플릿 2. 템플릿에 추가할 정보가 담긴 객체
+export const home = async  (req, res) => {
+     try {
+        const videos = await Video.find({});
+         res.render("home" , {pageTitle: "Home" , videos});
+     } catch (error) {
+         console.log(error);
+         res.render("home" , {pageTitle: "Home" , videos : [] });
+     }
+}
 export const search = (req, res) => {
     //const searchingBy =  req.query.term;
     const {
@@ -11,12 +19,19 @@ export const search = (req, res) => {
 }
 
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
-export const postUpload = (req, res) =>  {
+export const postUpload = async (req, res) =>  {
     const {
-        body : {file, title, description} 
+        body : {file, title, description},
+        file : {path}
     } = req;
-    //To do : Upload and savew Video
-    res.redirect(routes.videoDetail(123));
+    const newVideo = await Video.create({
+        fileUrl : path,
+        title,
+        description,
+    });
+
+    console.log(newVideo);
+    res.redirect(routes.videoDetail(newVideo.id));
 };
 
 export const videoDetail = (req, res) => res.render("videoDetail",  { pageTitle: "videoDetail" });
