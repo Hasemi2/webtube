@@ -10,11 +10,18 @@ export const home = async (req, res) => {
         res.render("home", { pageTitle: "Home", videos: [] });
     }
 }
-export const search = (req, res) => {
+export const search = async (req, res) => {
     //const searchingBy =  req.query.term;
     const {
         query: { term: searchingBy }
     } = req;
+    let videos = [];
+    try {
+        videos = await Video.find({title:{$regex: searchingBy, $options:"i"}}); //insentive 대소문자 구분 x
+    } catch (error) {
+        console.log(error);
+    }
+  
     res.render("search", { pageTitle: "Search", searchingBy, videos });
 }
 
@@ -55,6 +62,8 @@ export const getEditVideo =  async (req, res) => {
     } = req;
    try {
        const video = await Video.findById(id);
+       console.log("video===============================> " , video.id);
+       console.log("video===============================> " , video._id);
        res.render("editVideo", { pageTitle: `${video.title}`, video });   
    } catch (error) {
        console.log(error);
