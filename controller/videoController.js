@@ -17,7 +17,7 @@ export const search = async (req, res) => {
     } = req;
     let videos = [];
     try {
-        videos = await Video.find({title:{$regex: searchingBy, $options:"i"}}); //insentive 대소문자 구분 x
+        videos = await Video.find({title:{$regex: searchingBy, $options:"i"}}); //i ==> i   nsentive 대소문자 구분 x
     } catch (error) {
         console.log(error);
     }
@@ -62,8 +62,6 @@ export const getEditVideo =  async (req, res) => {
     } = req;
    try {
        const video = await Video.findById(id);
-       console.log("video===============================> " , video.id);
-       console.log("video===============================> " , video._id);
        res.render("editVideo", { pageTitle: `${video.title}`, video });   
    } catch (error) {
        console.log(error);

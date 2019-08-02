@@ -3,7 +3,7 @@ import routes from "../routes";
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
 export const postJoin = (req, res) => {
-    console.log(req.body); //form에서 전송한 데이터 받음
+    //console.log(req.body); //form에서 전송한 데이터 받음
     const {
         body : {name, email, password, password2}
     } = req;
@@ -13,6 +13,7 @@ export const postJoin = (req, res) => {
         // To Do : Register User
         // To Do : Login user
         res.redirect(routes.home);
+        
     }
     res.render("join", { pageTitle: "Join" });
 }
