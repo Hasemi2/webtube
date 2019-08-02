@@ -1,21 +1,26 @@
 import routes from "../routes";
+import User from "../models/User";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
-export const postJoin = (req, res) => {
-    //console.log(req.body); //form에서 전송한 데이터 받음
+export const postJoin = async (req, res) => {
+    //console.log(req.body); 
+    //form에서 전송한 데이터 받음
     const {
         body : {name, email, password, password2}
     } = req;
     if(password !== password2){
         res.status(400);
     }else{
-        // To Do : Register User
-        // To Do : Login user
+        const user = await User.create({
+            name, 
+            email
+        });
+        await User.register(name, password);
         res.redirect(routes.home);
         
     }
-    res.render("join", { pageTitle: "Join" });
+    res.render("join", { pageTitle: "Join" , test : false});
 }
 
 export const getLogin = (req, res) => res.render("login", { pageTitle: "login" });
