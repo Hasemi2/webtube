@@ -13,4 +13,4 @@ export const localMiddleWare = (req, res, next) => {
     next();
 };
 
-export const uploadVideo = multerVideo.single("videoFile");
+export const uploadVideo = multerVideo.single("videoFile"); //form을 통해 전송되는 파일의 name속성

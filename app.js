@@ -14,7 +14,7 @@ const app = express();
 app.use(helmet()); //보안설정
 app.set("view engine" , "pug");
 app.use("/uploads" , express.static("uploads")); //정적 파일을 제공하는 미들웨어 함수 uploads의 디렉토리에 포함된 동영상 url을 정적 파일로 제공함
-app.use("/static" , express.static("static"));
+app.use("/static" , express.static("static")); //webpack build시 generate 되는 static 폴더의 css와 js파일이 들어있는 폴더
 app.use(cookieParser()); //쿠키를 전달받아서 사용할수 있도록 만들어주는 미들웨어
 app.use(bodyParser.urlencoded({extended:true}));  //json 형태의  request 데이터 검사
 app.use(bodyParser.json()); 

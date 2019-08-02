@@ -14,7 +14,7 @@ import { uploadVideo } from "../middlewares";
 
 const videoRouter = express.Router();
 videoRouter.get(routes.upload, getUpload);
-videoRouter.post(routes.upload, uploadVideo, postUpload);
+videoRouter.post(routes.upload, uploadVideo, postUpload); //multer 모듈을 사용하여 파일전송 관리함
 
 videoRouter.get(routes.videoDetail(), videoDetail);
 
