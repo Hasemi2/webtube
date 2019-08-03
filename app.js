@@ -9,9 +9,14 @@ import globalRouter from "./routers/globalRouter";
 import routes from "./routes";
 import { localMiddleWare } from "./middlewares";
 import passport from "passport";
+import session from "express-session";
 import "./passport";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
+
+console.log("process.env.COOKIE_SECRET ==> " , process.env.COOKIE_SECRET);
 
 app.use(helmet()); //보안설정
 app.set("view engine" , "pug");
@@ -21,9 +26,13 @@ app.use(cookieParser()); //쿠키를 전달받아서 사용할수 있도록 만�
 app.use(bodyParser.urlencoded({extended:true}));  //json 형태의  request 데이터 검사
 app.use(bodyParser.json()); 
 app.use(morgan("dev")); //logging
+app.use(session({
+        secret : process.env.COOKIE_SECRET,
+        resave :true,
+        saveUninitialized : false
+    }));
 app.use(passport.initialize()); //passport 초기화
-//app.use(passport.session()); //세션 설정
-
+app.use(passport.session()); //세션 설정
 app.use(localMiddleWare);
 app.use(routes.home , globalRouter);
 app.use(routes.users , userRouter);
