@@ -7,7 +7,6 @@ export const localMiddleWare = (req, res, next) => {
     res.locals.siteName = 'Webtube';
     res.locals.routes = routes;
     res.locals.user = req.user || null; //passport에서 user 가 담긴 object를 request에 올려줌
-    console.log("user " , req.user);
     next();
 };
 
