@@ -21,7 +21,7 @@ passport.use(User.createStrategy());
 passport.use(new GithubStrategy({
     clientID: process.env.GH_ID,
     clientSecret: process.env.GH_SECRET,
-    callbackURL: `http://127.0.0.1:3000${routes.githubCallback}`
+    callbackURL: `http://192.168.3.7:4000${routes.githubCallback}`
 },
     githubLoginCallback
 ));
