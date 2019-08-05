@@ -12,11 +12,12 @@ import passport from "passport";
 import session from "express-session";
 import "./passport";
 import dotenv from "dotenv";
+import MongoStore from "connect-mongo";
+import Mongoose from "mongoose";
 dotenv.config();
 
 const app = express();
-
-console.log("process.env.COOKIE_SECRET ==> " , process.env.COOKIE_SECRET);
+const CookieStore = MongoStore(session);
 
 app.use(helmet()); //보안설정
 app.set("view engine" , "pug");
@@ -29,11 +30,14 @@ app.use(morgan("dev")); //logging
 app.use(session({
         secret : process.env.COOKIE_SECRET,
         resave :false, //세션을 언제나 저장할지(권장 false)
-        saveUninitialized : true //세션이 저장되기 전에 uninitialize 상태로 미리 만들어서 저장
+        saveUninitialized : true, //세션이 저장되기 전에 uninitialize 상태로 미리 만들어서 저장
+        sotre : new CookieStore({mongooseConnection : Mongoose.connection})
     }));
 app.use(passport.initialize()); //passport 초기화
 app.use(passport.session()); //세션 설정
+
 app.use(localMiddleWare);
+
 app.use(routes.home , globalRouter);
 app.use(routes.users , userRouter);
 app.use(routes.videos , videoRouter);

@@ -11,4 +11,12 @@ export const localMiddleWare = (req, res, next) => {
     next();
 };
 
+export const onlyPublic = (req, res, next) => {
+    if (req.user){
+        res.redirect(routes.home);
+    }else{
+        next();
+    }
+}
+
 export const uploadVideo = multerVideo.single("videoFile"); //form을 통해 전송되는 파일의 name속성
