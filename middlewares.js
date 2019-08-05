@@ -19,4 +19,14 @@ export const onlyPublic = (req, res, next) => {
     }
 }
 
+ 
+export const onlyPrivate = (req, res, next) => {
+    if (req.user){
+        next();
+    }else{
+        res.redirect(routes.home);
+    }
+}
+
+
 export const uploadVideo = multerVideo.single("videoFile"); //form을 통해 전송되는 파일의 name속성
