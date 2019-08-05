@@ -1,0 +1,7 @@
+extends layouts/main
+
+block content
+    .user-profile
+        .user-profile__header
+        img.avatar(src=user.avatarUrl)
+        h3.profile__username=user.name ==null? "Name no exists, Setting your name" : user.name

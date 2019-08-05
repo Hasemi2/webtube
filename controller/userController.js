@@ -35,17 +35,35 @@ export const postJoin = async (req, res) => {
 
 export const githubLogin = passport.authenticate("github");
 
-export const githubLoginCallback = (accessToken, refreshToken, profile, cb) => {
-    console.log("accessToken", accessToken);
-    console.log("refreshToken", refreshToken);
-    console.log("profile", profile);
-    console.log("cb", cb);
+export const githubLoginCallback = async (_, __, profile, cb) => {
+    const { 
+        _json: {id, avatar_url, name, email }
+    } = profile;
+
+     try {
+         const user = await User.findOne({email});
+
+         if(user){
+             user.githubId = id;
+             user.save();
+             return cb(null, user);
+
+         }
+             const newUser = await User.create({
+                 email, name, githubId:id, avatarUrl : avatar_url
+             });
+             return cb(null, newUser);
+     
+     } catch (error) {
+         console.log(error);
+         return cb(error);
+     }
     return null;
 
 }
 
 export const postGithubLogIn = (req, res) => {
-    res.send(routes.home);
+    res.redirect(routes.home);
 }
 
 export const getLogin = (req, res) => res.render("login", { pageTitle: "login" });
@@ -61,8 +79,20 @@ export const logout = (req, res) => {
     res.redirect(routes.home);
 }
 
+export const getMe = (req, res) => {
+    res.render("userDetail", { pageTitle: "userDetail", user : req.user }); //req.user 는 현재 로그인된 사용자, passport가 올려줌
+}
 
 export const users = (req, res) => res.render("users", { pageTitle: "users" });
-export const userDetail = (req, res) => res.render("userDetail", { pageTitle: "userDetail" });
+export const userDetail = async (req, res) => {
+    const {params : {id}} = req;
+
+    try {
+        const user = await User.findById(id);
+        res.render("userDetail", { pageTitle: "userDetail" , user});
+    } catch (error) {
+        res.redirect(routes.home);
+    }
+}
 export const editProfile = (req, res) => res.render("editProfile", { pageTitle: "editProfile" });
 export const changePassword = (req, res) => res.render("changePassword", { pageTitle: "changePassword" });
