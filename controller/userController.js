@@ -10,8 +10,10 @@ export const postJoin = async (req, res) => {
     const {
         body : {name, email, password, password2}
     } = req;
+     
     if(password !== password2){
         res.status(400);
+        res.render("join", { pageTitle: "Join"});
     }else{
         try {
             const user = await User({
@@ -20,26 +22,29 @@ export const postJoin = async (req, res) => {
             });
             await User.register(name, password);     
             next();
+
         } catch (error) {
             console.log(error);
             res.redirect(routes.home);
         }
         
     }
-    res.render("join", { pageTitle: "Join" , test : false});
+    
 }
 
 export const getLogin = (req, res) => res.render("login", { pageTitle: "login" });
 
-export const postLogin =    passport.authenticate('login' , {
-    failureRedirect: routes.login,
-    successRedirect : routes.home
+export const postLogin = passport.authenticate("local",{
+    successRedirect : routes.home,
+    failureRedirect: routes.login
 }); 
 
 export const logout = (req, res) => {
     //todo: logout
     res.redirect(routes.home);
 }
+
+
 export const users = (req, res) => res.render("users", { pageTitle: "users" });
 export const userDetail = (req, res) => res.render("userDetail", { pageTitle: "userDetail" });
 export const editProfile = (req, res) => res.render("editProfile", { pageTitle: "editProfile" });

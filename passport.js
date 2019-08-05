@@ -5,5 +5,6 @@ import User from "./models/User";
 //deserialization : 어느 사용자인지 어떻게 찾느냐 (쿠키 -> 사용자정보)
  
 passport.use(User.createStrategy());
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
