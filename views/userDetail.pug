@@ -1,7 +1,14 @@
 extends layouts/main
+include mixins/videoBlock
 
 block content
     .user-profile
         .user-profile__header
-        img.avatar(src=user.avatarUrl)
-        h3.profile__username=user.name ==null? "Name no exists, Setting your name" : user.name
+            img.u-avatar(src=user.avatarUrl)
+            h4.profile__username=user.name
+        if loggedUser && loggedUser.id === user.id
+            .user-profile__btns
+                a(href=`/users${routes.editProfile}`)
+                    button ✏️ Edit Profile
+                a(href=`/users${routes.changePassword}`)
+                    button 🔒 Change Password
