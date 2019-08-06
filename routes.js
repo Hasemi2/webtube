@@ -15,6 +15,9 @@ const NAVER_CALLBACK = "/auth/naver/callback";
 const KAKAO = "/auth/kakao";
 const KAKAO_CALLBACK = "/auth/kakao/callback";
 
+const FACEBOOK = "/auth/facebook";
+const FACEBOOK_CALLBACK = "/auth/facebook/callback";
+
 //Users
 const USERS = "/users";
 const USER_DETAIL ="/:id";
@@ -42,6 +45,8 @@ const routes  = {
     naverCallback : NAVER_CALLBACK,
     kakao : KAKAO,
     kakaoCallback : KAKAO_CALLBACK,
+    facebook : FACEBOOK,
+    facebookCallback : FACEBOOK_CALLBACK,
     users : USERS, 
     userDetail : (id) => {
         if(id){

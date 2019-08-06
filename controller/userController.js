@@ -57,8 +57,6 @@ export const githubLoginCallback = async (_, __, profile, cb) => {
          console.log(error);
          return cb(error);
      }
-    return null;
-
 }
 
 export const postGithubLogIn = (req, res) => {
@@ -124,6 +122,30 @@ export const kakaoLoginCallback = async (_, __, profile, done) =>{
 }
 
 export const postKakaoLogin = (req, res) => res.redirect(routes.home);
+
+export const facebookLogin = passport.authenticate('facebook');
+
+export const facebookCallback =  async (_, __, profile, done) =>{
+    console.log(profile);
+    const { 
+        _json : { id, name, email}
+    } = profile;
+
+    const user = await User.findOne({email});
+    if(user){
+        user.facebookId = id;
+        user.save();
+        return done(null, user);
+    }
+
+    
+    const newUser = await User.create({
+        email, name, facebookId:id, avatarUrl : `https://graph.facebook.com/${id}/pciture?type=large` });
+    return done(null, newUser);
+
+}
+
+export const postFacebookLogin = (req, res) => res.redirect(routes.home);
 
 export const getLogin = (req, res) => res.render("login", { pageTitle: "login" });
 
