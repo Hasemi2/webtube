@@ -4,7 +4,7 @@ import passport from "passport";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
-export const postJoin = async (req, res) => {
+export const postJoin = async (req, res, next) => {
     //console.log(req.body); 
     //form에서 전송한 데이터 받음
     const {
