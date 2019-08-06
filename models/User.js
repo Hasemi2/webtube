@@ -6,7 +6,9 @@ const UserSchema = new mongoose.Schema({
     email:String,
     avatarUrl : String,
     facebookId: Number,
-    githubId : Number
+    githubId : Number,
+    naverId : Number,
+    kakaoId : Number
 });
 
 //플러그인 설정

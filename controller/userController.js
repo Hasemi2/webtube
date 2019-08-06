@@ -1,7 +1,6 @@
 import routes from "../routes";
 import User from "../models/User";
 import passport from "passport";
-import { createVerify } from "crypto";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
@@ -66,6 +65,66 @@ export const postGithubLogIn = (req, res) => {
     res.redirect(routes.home);
 }
 
+export const naverLogin =  passport.authenticate("naver");
+
+export const naverLoginCallback = async (_, __, profile, done) =>{
+    const {
+        _json:{
+            email,
+            id,
+            nickname,
+            profile_image
+        }   
+    } = profile;
+
+    const user = await User.findOne({email});
+    if(user){
+        user.naverId = id;
+        user.save();
+        return done(null, user);
+    }
+
+    
+    const newUser = await User.create({
+        email, name:nickname, naverId:id, avatarUrl : profile_image
+    });
+    return done(null, newUser);
+}
+
+export const postNaverLogIn = (req, res) => {
+    res.redirect(routes.home);
+}
+
+export const kakaoLogin = passport.authenticate("kakao");
+
+export const kakaoLoginCallback = async (_, __, profile, done) =>{
+    const {
+        _json:{ 
+            kaccount_email, 
+            id ,
+        properties : {
+            profile_image,
+            nickname
+        }
+    }   
+} = profile;
+
+    const user = await User.findOne({kaccount_email});
+    if(user){
+        user.kakaoId = id;
+        user.save();
+        return done(null, user);
+    }
+
+    
+    const newUser = await User.create({
+        email:kaccount_email, name:nickname, kakaoId:id, avatarUrl : profile_image
+    });
+    return done(null, newUser);
+}
+
+export const postKakaoLogin = (req, res) => res.redirect(routes.home);
+
 export const getLogin = (req, res) => res.render("login", { pageTitle: "login" });
 
 export const postLogin = passport.authenticate("local", {
@@ -74,7 +133,6 @@ export const postLogin = passport.authenticate("local", {
 });
 
 export const logout = (req, res) => {
-    //todo: logout
     req.logout();
     res.redirect(routes.home);
 }

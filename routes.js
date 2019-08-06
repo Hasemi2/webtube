@@ -9,6 +9,12 @@ const SEARCH = "/search";
 const GITHUB = "/auth/github";
 const GITHUB_CALLBACK = "/auth/github/callback";
 
+const NAVER = "/auth/naver";
+const NAVER_CALLBACK = "/auth/naver/callback";
+
+const KAKAO = "/auth/kakao";
+const KAKAO_CALLBACK = "/auth/kakao/callback";
+
 //Users
 const USERS = "/users";
 const USER_DETAIL ="/:id";
@@ -32,6 +38,10 @@ const routes  = {
     search : SEARCH,
     github : GITHUB,
     githubCallback : GITHUB_CALLBACK,
+    naver : NAVER,
+    naverCallback : NAVER_CALLBACK,
+    kakao : KAKAO,
+    kakaoCallback : KAKAO_CALLBACK,
     users : USERS, 
     userDetail : (id) => {
         if(id){
