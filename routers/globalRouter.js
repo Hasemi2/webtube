@@ -42,7 +42,6 @@ globalRouter.get(
 
 //facebook login
 globalRouter.get(routes.facebook, facebookLogin);   
-
 globalRouter.get(
     routes.facebookCallback,
     passport.authenticate('facebook', {failureRedirect: routes.login}),

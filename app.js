@@ -14,6 +14,7 @@ import "./passport";
 import dotenv from "dotenv";
 import MongoStore from "connect-mongo";
 import Mongoose from "mongoose";
+import flash from "connect-flash";
 dotenv.config();
 
 const app = express();
@@ -33,8 +34,10 @@ app.use(session({
         saveUninitialized : true, //세션이 저장되기 전에 uninitialize 상태로 미리 만들어서 저장
         sotre : new CookieStore({mongooseConnection : Mongoose.connection})
     }));
+app.use(flash());    
 app.use(passport.initialize()); //passport 초기화
 app.use(passport.session()); //세션 설정
+
 
 app.use(localMiddleWare);
 

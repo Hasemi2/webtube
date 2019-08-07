@@ -2,6 +2,8 @@ import routes from "./routes";
 import multer from "multer";
 
 const multerVideo = multer( {dest : "uploads/videos/"});
+const multerAvatar = multer({dest : "uploads/avatar/"});
+
 
 export const localMiddleWare = (req, res, next) => {
     res.locals.siteName = 'Webtube';
@@ -29,3 +31,5 @@ export const onlyPrivate = (req, res, next) => {
 
 
 export const uploadVideo = multerVideo.single("videoFile"); //form을 통해 전송되는 파일의 name속성
+
+export const uploadAvatar = multerAvatar.single("avatar");

@@ -12,6 +12,7 @@ export const postJoin = async (req, res, next) => {
     } = req;
 
     if (password !== password2) {
+        req.flash("error", "Passwords don't match");
         res.status(400);
         res.render("join", { pageTitle: "Join" });
     } else {
@@ -126,7 +127,6 @@ export const postKakaoLogin = (req, res) => res.redirect(routes.home);
 export const facebookLogin = passport.authenticate('facebook');
 
 export const facebookCallback =  async (_, __, profile, done) =>{
-    console.log(profile);
     const { 
         _json : { id, name, email}
     } = profile;
@@ -174,7 +174,28 @@ export const userDetail = async (req, res) => {
         res.redirect(routes.home);
     }
 }
-export const getEditProfile = (req, res) => res.render("editProfile", { pageTitle: "editProfile" });
 
+export const postEditProfile = async (req, res) => {
+    console.log("req ===> " , req);
+    const {
+        body : { name , email }, 
+        file ,
+        user : {_id, avatarUrl}
+    
+    } = req;
+    try {
+        await User.findByIdAndUpdate(
+            _id ,
+             { name, email, avatarUrl: file? file.path : avatarUrl }
+    );
+        res.redirect(routes.me);
+    } catch (error) {
+        console.log(error);
+        res.render("editProfile", { pageTitle: "editProfile" });
+    }   
+
+}
+
+export const getEditProfile = (req, res) => res.render("editProfile", { pageTitle: "editProfile" });
 
 export const changePassword = (req, res) => res.render("changePassword", { pageTitle: "changePassword" });
