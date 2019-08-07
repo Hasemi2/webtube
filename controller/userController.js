@@ -167,6 +167,7 @@ export const users = (req, res) => res.render("users", { pageTitle: "users" });
 export const userDetail = async (req, res) => {
     const {params : {id}} = req;
     try {
+        //todo: populate 버그있음
         const user = await User.findById(id).populate({
             path : 'videos',
             model : User
