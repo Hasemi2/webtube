@@ -5,7 +5,7 @@ block content
         .video__player
             video(src=`/${video.fileUrl}`)
         .video__info
-            if(loggedUser != null && video.creator.id === loggedUser.id)
+            if loggedUser && video.creator.id === loggedUser.id) 
                 a(href=routes.editVideo(video.id)) 
                     button Edit Video
             h5.video__title=video.title
@@ -19,6 +19,5 @@ block content
                 span.video__comment-number 1 comment
             else
                 span.video__comment-number #{video.comments.length} comments
-
         
 

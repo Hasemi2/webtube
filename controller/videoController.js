@@ -3,7 +3,7 @@ import routes from "../routes";
 
 export const home = async (req, res) => {
     try {
-        const videos = await Video.find({}).sort({_id : -1});
+        const videos = await Video.find({}).sort({ _id: -1 });
         res.render("home", { pageTitle: "Home", videos });
     } catch (error) {
         console.log(error);
@@ -17,19 +17,18 @@ export const search = async (req, res) => {
     } = req;
     let videos = [];
     try {
-        videos = await Video.find({title:{$regex: searchingBy, $options:"i"}}); //i ==> i   nsentive 대소문자 구분 x
+        videos = await Video.find({ title: { $regex: searchingBy, $options: "i" } }); //i ==> i   nsentive 대소문자 구분 x
     } catch (error) {
         console.log(error);
     }
-  
+
     res.render("search", { pageTitle: "Search", searchingBy, videos });
 }
 
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
 export const postUpload = async (req, res) => {
-    console.log(req);
     const {
-        body: { file, title, description },
+        body: { title, description },
         file: { path }
     } = req;
 
@@ -37,67 +36,79 @@ export const postUpload = async (req, res) => {
         fileUrl: path,
         title,
         description,
-        creator : req.user.id
+        creator: req.user.id
     });
     req.user.videos.push(newVideo.creator);
     req.user.save();
-    res.redirect(routes.videoDetail(newVideo.id));  
+    console.log("req.use====> " ,  req.user);
+    res.redirect(routes.videoDetail(newVideo.id));
 };
 
 export const videoDetail = async (req, res) => {
     const {
-        params: {id}
+        params: { id }
     } = req;
     try {
-        const video = await Video.findById(id).populate("creator"); 
+        const video = await Video.findById(id).populate("creator");
         //populate() : Schema에서 참조하는 ref 객체로 치환해줌, 여기서는 User객체
-        res.render("videoDetail", { pageTitle: video.title , video });   
+        res.render("videoDetail", { pageTitle: video.title, video });
     } catch (error) {
-        console.log("error" ,error);
+        console.log("error", error);
         res.redirect(routes.home);
     }
-    
+
 
 
 }
-export const getEditVideo =  async (req, res) => {
+export const getEditVideo = async (req, res) => {
     const {
-        params : {id}
+        params: { id }
     } = req;
-   try {
-       const video = await Video.findById(id);
-       res.render("editVideo", { pageTitle: `${video.title}`, video });   
-   } catch (error) {
-       console.log(error);
-       res.redirect(routes.home);
-   } 
+    try {
+        const video = await Video.findById(id);
+        if (video.creator !== req.user.id) {
+            throw Error(); //try 안에서 에러 발생시 catch절로 가게됨
+        } else {
+            res.render("editVideo", { pageTitle: `${video.title}`, video });
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.redirect(routes.home);
+    }
     res.render("editVideo", { pageTitle: "editVideo" });
 }
 
 export const postEditVideo = async (req, res) => {
     const {
-        params : {id},
-        body : {title, description}
+        params: { id },
+        body: { title, description }
     } = req;
-    
+
     try {
-        await Video.findByIdAndUpdate({_id : id}, {title, description});
+        await Video.findByIdAndUpdate({ _id: id }, { title, description });
         res.redirect(routes.videoDetail(id));
     } catch (error) {
         console.log(error);
         res.redirect(routes.home);
     }
-  
+
 }
 
 export const deleteVideo = async (req, res) => {
     const {
-        params : {id}
+        params: { id }
     } = req;
 
     try {
-        await Video.findByIdAndDelete({_id : id});
-        res.redirect(routes.home);
+        const video = await Video.findById(id);
+        if (video.creator !== req.user.id) {
+            throw Error(); //try 안에서 에러 발생시 catch절로 가게됨
+        } else {
+            await Video.findByIdAndDelete({ _id: id });
+            res.redirect(routes.home);
+        }
+
 
     } catch (error) {
         console.log(error);

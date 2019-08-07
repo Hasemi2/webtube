@@ -138,7 +138,6 @@ export const facebookCallback =  async (_, __, profile, done) =>{
         return done(null, user);
     }
 
-    
     const newUser = await User.create({
         email, name, facebookId:id, avatarUrl : `https://graph.facebook.com/${id}/pciture?type=large` });
     return done(null, newUser);
@@ -164,11 +163,13 @@ export const getMe = (req, res) => {
 }
 
 export const users = (req, res) => res.render("users", { pageTitle: "users" });
+
 export const userDetail = async (req, res) => {
     const {params : {id}} = req;
-
+    //console.log("id===> " , id);
     try {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate("videos");
+       // console.log("userDetail user=====> " , user)
         res.render("userDetail", { pageTitle: "userDetail" , user});
     } catch (error) {
         res.redirect(routes.home);
@@ -176,7 +177,6 @@ export const userDetail = async (req, res) => {
 }
 
 export const postEditProfile = async (req, res) => {
-    console.log("req ===> " , req);
     const {
         body : { name , email }, 
         file ,
