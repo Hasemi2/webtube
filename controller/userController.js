@@ -198,4 +198,23 @@ export const postEditProfile = async (req, res) => {
 
 export const getEditProfile = (req, res) => res.render("editProfile", { pageTitle: "editProfile" });
 
-export const changePassword = (req, res) => res.render("changePassword", { pageTitle: "changePassword" });
+export const postChangePassword = async (req, res) => {
+    const {
+        body : {oldPassword , newPassword, newPassword1}
+    } = req;
+    try { 
+        if(newPassword !== newPassword1){
+            res.status(400);
+            res.redirect(`/users${routes.changePassword}`);
+            return
+        }else{
+            await req.user.chagePassword(oldPassword, newPassword); //user를 조회할 필요 없이 바로 password 변경이 가능함
+        }
+    } catch (error) {
+        console.log(error);
+        res.redirect(`/users${routes.changePassword}`);
+    }
+   
+}
+
+export const getChangePassword = (req, res) => res.render("changePassword", { pageTitle: "changePassword" });

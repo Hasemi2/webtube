@@ -27,26 +27,30 @@ export const search = async (req, res) => {
 
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
 export const postUpload = async (req, res) => {
+    console.log(req);
     const {
         body: { file, title, description },
         file: { path }
     } = req;
+
     const newVideo = await Video.create({
         fileUrl: path,
         title,
         description,
+        creator : req.user.id
     });
-    res.redirect(routes.home);
-    //res.redirect(routes.videoDetail(newVideo.id));
+    req.user.videos.push(newVideo.creator);
+    req.user.save();
+    res.redirect(routes.videoDetail(newVideo.id));  
 };
 
 export const videoDetail = async (req, res) => {
-    //console.log("req.params " , req.params);
     const {
         params: {id}
     } = req;
     try {
-        const video = await Video.findById(id); 
+        const video = await Video.findById(id).populate("creator"); 
+        //populate() : Schema에서 참조하는 ref 객체로 치환해줌, 여기서는 User객체
         res.render("videoDetail", { pageTitle: video.title , video });   
     } catch (error) {
         console.log("error" ,error);

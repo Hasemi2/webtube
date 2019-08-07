@@ -8,7 +8,19 @@ const UserSchema = new mongoose.Schema({
     facebookId: Number,
     githubId : Number,
     naverId : Number,
-    kakaoId : Number
+    kakaoId : Number,
+    comments : [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
+    ],
+    videos : [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Video"
+        }
+    ]
 });
 
 //플러그인 설정
