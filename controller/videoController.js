@@ -27,7 +27,6 @@ export const search = async (req, res) => {
 
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
 export const postUpload = async (req, res) => {
-    console.log(req.files);
     const {
         body: { title, description },
         files: {

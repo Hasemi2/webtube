@@ -3,8 +3,6 @@ import multer from "multer";
 
 const multerVideo = multer( {dest : "uploads/videos/"});
 const multerAvatar = multer({dest : "uploads/avatar/"});
-const multerThumbnail = multer({dest : "uploads/thumbnail/"});
-
 
 export const localMiddleWare = (req, res, next) => {
     res.locals.siteName = 'Webtube';
