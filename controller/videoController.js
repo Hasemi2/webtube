@@ -40,7 +40,6 @@ export const postUpload = async (req, res) => {
     });
     req.user.videos.push(newVideo.creator);
     req.user.save();
-    console.log("req.use====> " ,  req.user);
     res.redirect(routes.videoDetail(newVideo.id));
 };
 

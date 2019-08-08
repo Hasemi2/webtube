@@ -25,10 +25,14 @@ function handleVolumeClick() {
 }
 
 function handleFullScreenClick() {
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
-    } else {
+    if (videoPlayer.requestFullscreen) {
         videoPlayer.requestFullscreen();
+    } else if (videoPlayer.mozRequestFullScreen) { //Fire fox
+        videoPlayer.mozRequestFullScreen(); 
+    } else if (videoPlayer.webkitRequestFullscreen) { //Chrome, Safari & Opera
+        videoPlayer.webkitRequestFullscreen();
+    } else if (videoPlayer.msRequestFullscreen) { //IE/Edge
+        videoPlayer.msRequestFullscreen();
     }
 }
 
