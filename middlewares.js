@@ -3,6 +3,7 @@ import multer from "multer";
 
 const multerVideo = multer( {dest : "uploads/videos/"});
 const multerAvatar = multer({dest : "uploads/avatar/"});
+const multerThumbnail = multer({dest : "uploads/thumbnail/"});
 
 
 export const localMiddleWare = (req, res, next) => {
@@ -30,6 +31,7 @@ export const onlyPrivate = (req, res, next) => {
 }
 
 
-export const uploadVideo = multerVideo.single("videoFile"); //form을 통해 전송되는 파일의 name속성
+export const uploadVideo = multerVideo.fields([
+    {name : "videoFile" } , {name : "thumbnail"}]); //form을 통해 전송되는 파일의 name속성
 
 export const uploadAvatar = multerAvatar.single("avatar");

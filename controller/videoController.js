@@ -27,17 +27,23 @@ export const search = async (req, res) => {
 
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
 export const postUpload = async (req, res) => {
+    console.log(req.files);
     const {
         body: { title, description },
-        file: { path }
+        files: {
+            videoFile: [{ path: videoPath }],
+            thumbnail: [{ path: thumbPath }]
+        }
     } = req;
 
     const newVideo = await Video.create({
-        fileUrl: path,
+        fileUrl: videoPath,
+        thumbnail: thumbPath,
         title,
         description,
         creator: req.user.id
     });
+
     req.user.videos.push(newVideo.creator);
     req.user.save();
     res.redirect(routes.videoDetail(newVideo.id));
