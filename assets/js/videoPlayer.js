@@ -25,10 +25,10 @@ function handleVolumeClick() {
 }
 
 function handleFullScreenClick() {
-    if (videoPlayer.fullscreen) {
-        videoPlayer.requestFullscreen();
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
     } else {
-        videoPlayer.exitFullscreen();
+        videoPlayer.requestFullscreen();
     }
 }
 
