@@ -24,22 +24,43 @@ function handleVolumeClick() {
     }
 }
 
-function handleFullScreenClick() {
-    if (videoPlayer.requestFullscreen) {
-        videoPlayer.requestFullscreen();
-    } else if (videoPlayer.mozRequestFullScreen) { //Fire fox
-        videoPlayer.mozRequestFullScreen(); 
-    } else if (videoPlayer.webkitRequestFullscreen) { //Chrome, Safari & Opera
-        videoPlayer.webkitRequestFullscreen();
-    } else if (videoPlayer.msRequestFullscreen) { //IE/Edge
-        videoPlayer.msRequestFullscreen();
+function goFullScreen() {
+    if (videoContainer.requestFullscreen) {
+        videoContainer.requestFullscreen();
+    } else if (videoContainer.mozRequestFullScreen) { //Fire fox
+        videoContainer.mozRequestFullScreen(); 
+    } else if (videoContainer.webkitRequestFullscreen) { //Chrome, Safari & Opera
+        videoContainer.webkitRequestFullscreen();
+    } else if (videoContainer.msRequestFullscreen) { //IE/Edge
+        videoContainer.msRequestFullscreen();
     }
+
+    fullScreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+    fullScreenBtn.removeEventListener("click", goFullScreen);
+    fullScreenBtn.addEventListener("click", exitFullScreen);
 }
+function exitFullScreen() {
+    fullScreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+    fullScreenBtn.addEventListener("click", goFullScreen);
+
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { //Fire fox
+        document.mozCancelFullScreen(); 
+    } else if (document.webkitExitFullscreen) { //Chrome, Safari & Opera
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { //IE/Edge
+        document.msExitFullscreen();
+    }
+
+
+}
+
 
 function init() {
     playBtn.addEventListener("click", handlePlayClick);
     volumeBtn.addEventListener("click", handleVolumeClick);
-    fullScreenBtn.addEventListener("click", handleFullScreenClick);
+    fullScreenBtn.addEventListener("click", goFullScreen);
 }
 
 if (videoContainer) {

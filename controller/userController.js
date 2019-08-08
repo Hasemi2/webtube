@@ -47,13 +47,14 @@ export const githubLoginCallback = async (_, __, profile, cb) => {
              user.githubId = id;
              user.save();
              return cb(null, user);
-
+         }else{
+            const newUser = await User.create({
+                email, name, githubId:id, avatarUrl : avatar_url
+            });
+            return cb(null, newUser);
+    
          }
-             const newUser = await User.create({
-                 email, name, githubId:id, avatarUrl : avatar_url
-             });
-             return cb(null, newUser);
-     
+
      } catch (error) {
          console.log(error);
          return cb(error);
@@ -81,13 +82,15 @@ export const naverLoginCallback = async (_, __, profile, done) =>{
         user.naverId = id;
         user.save();
         return done(null, user);
-    }
-
-    
+    }else{
+            
     const newUser = await User.create({
         email, name:nickname, naverId:id, avatarUrl : profile_image
     });
     return done(null, newUser);
+    }
+
+
 }
 
 export const postNaverLogIn = (req, res) => {
@@ -108,18 +111,17 @@ export const kakaoLoginCallback = async (_, __, profile, done) =>{
     }   
 } = profile;
 
-    const user = await User.findOne({kaccount_email});
+    const user = await User.findOne({email : kaccount_email});
     if(user){
         user.kakaoId = id;
         user.save();
         return done(null, user);
+    }else{
+        const newUser = await User.create({
+            email:kaccount_email, name:nickname, kakaoId:id, avatarUrl : profile_image
+        });
+        return done(null, newUser);
     }
-
-    
-    const newUser = await User.create({
-        email:kaccount_email, name:nickname, kakaoId:id, avatarUrl : profile_image
-    });
-    return done(null, newUser);
 }
 
 export const postKakaoLogin = (req, res) => res.redirect(routes.home);
@@ -136,11 +138,12 @@ export const facebookCallback =  async (_, __, profile, done) =>{
         user.facebookId = id;
         user.save();
         return done(null, user);
-    }
 
-    const newUser = await User.create({
-        email, name, facebookId:id, avatarUrl : `https://graph.facebook.com/${id}/pciture?type=large` });
-    return done(null, newUser);
+    }else{
+        const newUser = await User.create({
+            email, name, facebookId:id, avatarUrl : `https://graph.facebook.com/${id}/pciture?type=large` });
+        return done(null, newUser);
+    }
 
 }
 
