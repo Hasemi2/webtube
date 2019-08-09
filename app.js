@@ -32,12 +32,11 @@ app.use(session({
         secret : process.env.COOKIE_SECRET,
         resave :false, //세션을 언제나 저장할지(권장 false)
         saveUninitialized : true, //세션이 저장되기 전에 uninitialize 상태로 미리 만들어서 저장
-        sotre : new CookieStore({mongooseConnection : Mongoose.connection})
+       // store : new CookieStore({mongooseConnection : Mongoose.connection})
     }));
 app.use(flash());    
 app.use(passport.initialize()); //passport 초기화
 app.use(passport.session()); //세션 설정
-
 
 app.use(localMiddleWare);
 
