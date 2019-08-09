@@ -6,12 +6,9 @@ let streamObject; //녹화된 object 영상물
 let videoRecorder;
 
 const handleVideoData = event => {
-  const { data: videoFile } = event;
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(videoFile);
-  link.download = "recorded.webm";
-  document.body.appendChild(link);
-  link.click();
+  console.log("data ===> " , event.data);
+  //const { data: videoFile } = event;
+  
 };
 
 const stopRecording = () => {
