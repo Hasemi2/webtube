@@ -7,9 +7,23 @@ let videoRecorder;
 
 const handleVideoData = event => {
   console.log("data ===> " , event.data);
-  //const { data: videoFile } = event;
-  
+
+  const { data: videoFile } = event;
+  console.log("videoFile ===> " , videoFile )
 };
+
+// returns file, that we can send to the server.
+function dataUrlToFile(dataUrl) {
+  var binary = atob(dataUrl.split(',')[1]),
+  data = [];
+
+  for (var i = 0; i < binary.length; i++)
+    data.push(binary.charCodeAt(i));
+
+  return new File([new Uint8Array(data)], 'recorded-video.webm', {
+    type: 'video/webm'
+  });
+}
 
 const stopRecording = () => {
   videoRecorder.stop();
