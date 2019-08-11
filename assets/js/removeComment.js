@@ -5,7 +5,7 @@ const commentNumber = document.getElementById("jsCommentNumber");
 
 function frontendRemoveComment(){
     console.log("frontendRemoveComment " , this.parentNode );
-    this.parentNode.style.visibility= "hidden";
+    this.parentNode.style.display= "none";
 }
 
 
