@@ -1,5 +1,22 @@
 import axios from "axios";
 const addComentForm = document.getElementById("jsAddComment");
+const commentList = document.getElementById("jsCommentList");
+const commentNumber = document.getElementById("jsCommentNumber");
+
+
+//페이지 새로고침 실시간 댓글 추가 기능처럼 보이는 fake 임 
+const addComment = (comment) => {
+    const li = document.createElement("li");
+    const span = document.createElement("span");
+    span.innerHTML = comment;
+    li.appendChild(span);
+    commentList.prepend(li);
+    increaseNumber();   
+}
+
+const increaseNumber = () => {
+    commentNumber.innerHTML = parseInt(commentNumber.innerText, 10) + 1
+}
 
 const handleSubmit = (event) => {
     event.preventDefault(); // 이벤트 막음 새로고침x
@@ -26,6 +43,10 @@ const sendComment = async (comment) => {
             comment
         }
     });
+
+    if(response.status === 200){
+        addComment(comment);
+    }
     console.log(response);
 }
 

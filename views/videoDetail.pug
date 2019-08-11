@@ -31,3 +31,7 @@ block content
                 each comment in video.comments.reverse()
                     li
                         span=comment.text
+                        input(type="hidden", value=comment.id)
+                        if loggedUser && comment.creator == loggedUser.id
+                            i.fa.fa-times         
+                

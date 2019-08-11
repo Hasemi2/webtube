@@ -57,6 +57,7 @@ export const videoDetail = async (req, res) => {
         const video = await Video.findById(id).populate("creator").populate("comments");
         //populate() : Schema에서 참조하는 ref 객체로 치환해줌, 여기서는 User객체
         res.render("videoDetail", { pageTitle: video.title, video });
+
     } catch (error) {
         console.log("error", error);
         res.redirect(routes.home);
@@ -158,6 +159,23 @@ export const postAddComment = async (req, res) => {
 
         video.comments.push(newComment._id);
         video.save();
+        res.status(200);
+    } catch (error) {
+        res.status(400);
+        console.log(error);
+    } finally {
+        res.end();
+    }
+}
+
+export const postRemoveComment = async(req, res) => {
+    const {
+        params : {id}
+    } = req;
+    console.log("req.body ==== > " , req.body);
+    console.log("id ==== > " , id);
+    try {
+        await Comment.findByIdAndRemove(id);
         res.status(200);
     } catch (error) {
         res.status(400);
