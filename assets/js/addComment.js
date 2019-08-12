@@ -8,14 +8,18 @@ const commentNumber = document.getElementById("jsCommentNumber");
 const addComment = (comment) => {
     const li = document.createElement("li");
     const span = document.createElement("span");
+    const i = document.createElement("i");
+
+    i.className ="fa fa-times";
     span.innerHTML = comment;
+    span.appendChild(i);
     li.appendChild(span);
     commentList.prepend(li);
     increaseNumber();   
 }
 
 const increaseNumber = () => {
-    commentNumber.innerHTML = parseInt(commentNumber.innerText, 10) + 1
+    commentNumber.innerHTML = parseInt(commentNumber.innerText, 10) + 1;
 }
 
 const handleSubmit = (event) => {
@@ -47,7 +51,6 @@ const sendComment = async (comment) => {
     if(response.status === 200){
         addComment(comment);
     }
-    console.log(response);
 }
 
 function init(){

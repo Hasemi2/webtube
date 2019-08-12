@@ -4,10 +4,13 @@ const commentList = document.getElementById("jsCommentList");
 const commentNumber = document.getElementById("jsCommentNumber");
 
 function frontendRemoveComment(){
-    console.log("frontendRemoveComment " , this.parentNode );
     this.parentNode.style.display= "none";
+    decreaseNumber();
 }
 
+function decreaseNumber(){
+    commentNumber.innerHTML = parseInt(commentNumber.innerText, 10) - 1;
+}
 
 async function handleRemoveComment(){
     const commentId = this.previousSibling.value;
