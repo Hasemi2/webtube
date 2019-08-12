@@ -1,9 +1,50 @@
 import axios from "axios";
+const removeCommentBtns = document.getElementsByClassName("fa-times");
 const addComentForm = document.getElementById("jsAddComment");
 const commentList = document.getElementById("jsCommentList");
 const commentNumber = document.getElementById("jsCommentNumber");
 
+//Remove Comment*****************************************************************
+function frontendRemoveComment(){
+    this.parentNode.style.display= "none";
+    decreaseNumber();
+}
 
+function decreaseNumber(){
+    commentNumber.innerHTML = parseInt(commentNumber.innerText, 10) - 1;
+}
+
+async function handleRemoveComment(){
+    const commentId = this.previousSibling.value;
+    const response  = await axios({
+        url : `/api/${commentId}/removeComment`, 
+        //url로 아이디값 보내서 req.params로 삭제할거라
+        //data는 따로 명시안함
+        method : "POST"
+    });
+
+    if(response.status === 200){
+        frontendRemoveComment.call(this);
+    }
+}
+
+// const handleRemoveComment = async ()=> {
+//     const commentId = this.previousSibling.value;
+//     const response  = await axios({
+//         url : `/api/${commentId}/removeComment`,
+//         method : "POST",
+//     });
+
+//     if(response.status === 200){
+//        console.log("remove Comment ===> ");
+//         // removeComment(commentId);
+//     }
+
+//     console.log(response);
+// }
+
+
+//Add Comment*****************************************************************
 //페이지 새로고침 실시간 댓글 추가 기능처럼 보이는 fake 임 
 const addComment = (comment) => {
     const li = document.createElement("li");
@@ -44,7 +85,7 @@ const sendComment = async (comment) => {
         url : `/api/${videoId}/comment`,
         method : "POST",
         data : {
-            comment
+            comment //body에  comment로 들어감
         }
     });
 
@@ -55,6 +96,9 @@ const sendComment = async (comment) => {
 
 function init(){
     addComentForm.addEventListener("submit" , handleSubmit);
+    Array.prototype.forEach.call(removeCommentBtns, (btn)=> {
+        btn.addEventListener("click" , handleRemoveComment);
+    });
 }
 
 if(addComentForm){
