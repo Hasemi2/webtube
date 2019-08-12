@@ -28,13 +28,21 @@ export const search = async (req, res) => {
 
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
 export const postUpload = async (req, res) => {
+    let thumbPath;
     const {
         body: { title, description },
         files: {
-            videoFile: [{ path: videoPath }],
-            thumbnail: [{ path: thumbPath }]
+            videoFile: [{ location: videoPath }], //기존 static filed은 path로, AWS S3 사용시 location에 url 저장됨
+            //thumbnail: [{ location: thumbPath }] 
+            //todo 여기서 선택적으로  thumnail을 보내거나 안보낼수도 있는데 이때 여기서 null처리를 어케함??
         }
     } = req;
+    
+    if(req.thumbnail){
+        thumbPath = req.thumbnail.location; 
+    } else{
+        thumbPath = "";
+    }
 
     const newVideo = await Video.create({
         fileUrl: videoPath,
@@ -47,6 +55,7 @@ export const postUpload = async (req, res) => {
     req.user.videos.push(newVideo.creator);
     req.user.save();
     res.redirect(routes.videoDetail(newVideo.id));
+
 };
 
 export const videoDetail = async (req, res) => {
