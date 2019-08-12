@@ -81,17 +81,17 @@ export const getEditVideo = async (req, res) => {
     } = req;
     try {
         const video = await Video.findById(id);
-        if (video.creator !== req.user.id) {
+
+        if (video.creator != req.user.id) {
             throw Error(); //try 안에서 에러 발생시 catch절로 가게됨
         } else {
-            res.render("editVideo", { pageTitle: `${video.title}`, video });
+            res.render("editVideo", { pageTitle: video.title, video });
         }
 
     } catch (error) {
         console.log(error);
         res.redirect(routes.home);
-    }
-    res.render("editVideo", { pageTitle: "editVideo" });
+    }   
 }
 
 export const postEditVideo = async (req, res) => {

@@ -224,6 +224,7 @@ export const postChangePassword = async (req, res) => {
     } = req;
     try {
         if (newPassword !== newPassword1) {
+            req.flash("error", "Password Not Matched");
             res.status(400);
             res.redirect(`/users${routes.changePassword}`);
             return
@@ -231,7 +232,8 @@ export const postChangePassword = async (req, res) => {
             await req.user.chagePassword(oldPassword, newPassword); //user를 조회할 필요 없이 바로 password 변경이 가능함
         }
     } catch (error) {
-        console.log(error);
+        req.flash("error", "Can't change password");
+        res.status(400);
         res.redirect(`/users${routes.changePassword}`);
     }
 
