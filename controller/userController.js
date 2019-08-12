@@ -185,14 +185,15 @@ export const userDetail = async (req, res) => {
 export const postEditProfile = async (req, res) => {
     const {
         body : { name , email }, 
-        file ,
+        file : { location } ,
         user : {_id, avatarUrl}
     
     } = req;
+
     try {
         await User.findByIdAndUpdate(
             _id ,
-             { name, email, avatarUrl: file? file.path : avatarUrl }
+             { name, email, avatarUrl: location? location : avatarUrl }
     );
         res.redirect(routes.me);
     } catch (error) {
