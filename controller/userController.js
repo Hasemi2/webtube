@@ -13,7 +13,6 @@ export const postJoin = async (req, res, next) => {
 
     if (password !== password2) {
         req.flash("error", "Passwords don't match");
-        
         res.status(400);
         res.render("join", { pageTitle: "Join" });
     } else {
@@ -34,61 +33,67 @@ export const postJoin = async (req, res, next) => {
 
 }
 
-export const githubLogin = passport.authenticate("github");
+export const githubLogin = passport.authenticate("github", {
+    successFlash: "Github Login Success",
+    failureFlash: "Github Login Fail"
+});
 
 export const githubLoginCallback = async (_, __, profile, cb) => {
-    const { 
-        _json: {id, avatar_url, name, email }
-    } = profile; 
+    const {
+        _json: { id, avatar_url, name, email }
+    } = profile;
 
-     try {
-         const user = await User.findOne({email});
+    try {
+        const user = await User.findOne({ email });
 
-         if(user){
-             user.githubId = id;
-             user.save();
-             return cb(null, user);
-         }else{
+        if (user) {
+            user.githubId = id;
+            user.save();
+            return cb(null, user);
+        } else {
             const newUser = await User.create({
-                email, name, githubId:id, avatarUrl : avatar_url
+                email, name, githubId: id, avatarUrl: avatar_url
             });
             return cb(null, newUser);
-    
-         }
 
-     } catch (error) {
-         console.log(error);
-         return cb(error);
-     }
+        }
+
+    } catch (error) {
+        console.log(error);
+        return cb(error);
+    }
 }
 
 export const postGithubLogIn = (req, res) => {
     res.redirect(routes.home);
 }
 
-export const naverLogin =  passport.authenticate("naver");
+export const naverLogin = passport.authenticate("naver", {
+    successFlash: "Naver Login Success",
+    failureFlash: "Naver Login Fail"
+});
 
-export const naverLoginCallback = async (_, __, profile, done) =>{
+export const naverLoginCallback = async (_, __, profile, done) => {
     const {
-        _json:{
+        _json: {
             email,
             id,
             nickname,
             profile_image
-        }   
+        }
     } = profile;
 
-    const user = await User.findOne({email});
-    if(user){
+    const user = await User.findOne({ email });
+    if (user) {
         user.naverId = id;
         user.save();
         return done(null, user);
-    }else{
-            
-    const newUser = await User.create({
-        email, name:nickname, naverId:id, avatarUrl : profile_image
-    });
-    return done(null, newUser);
+    } else {
+
+        const newUser = await User.create({
+            email, name: nickname, naverId: id, avatarUrl: profile_image
+        });
+        return done(null, newUser);
     }
 
 
@@ -98,28 +103,31 @@ export const postNaverLogIn = (req, res) => {
     res.redirect(routes.home);
 }
 
-export const kakaoLogin = passport.authenticate("kakao");
+export const kakaoLogin = passport.authenticate("kakao", {
+    successFlash: "Kakao Login Success",
+    failureFlash: "Kakao Login Fail"
+});
 
-export const kakaoLoginCallback = async (_, __, profile, done) =>{
+export const kakaoLoginCallback = async (_, __, profile, done) => {
     const {
-        _json:{ 
-            kaccount_email, 
-            id ,
-        properties : {
-            profile_image,
-            nickname
+        _json: {
+            kaccount_email,
+            id,
+            properties: {
+                profile_image,
+                nickname
+            }
         }
-    }   
-} = profile;
+    } = profile;
 
-    const user = await User.findOne({email : kaccount_email});
-    if(user){
+    const user = await User.findOne({ email: kaccount_email });
+    if (user) {
         user.kakaoId = id;
         user.save();
         return done(null, user);
-    }else{
+    } else {
         const newUser = await User.create({
-            email:kaccount_email, name:nickname, kakaoId:id, avatarUrl : profile_image
+            email: kaccount_email, name: nickname, kakaoId: id, avatarUrl: profile_image
         });
         return done(null, newUser);
     }
@@ -127,22 +135,26 @@ export const kakaoLoginCallback = async (_, __, profile, done) =>{
 
 export const postKakaoLogin = (req, res) => res.redirect(routes.home);
 
-export const facebookLogin = passport.authenticate('facebook');
+export const facebookLogin = passport.authenticate('facebook', {
+    successFlash: "Facebook Login Success",
+    failureFlash: "Facebook Login Fail"
+});
 
-export const facebookCallback =  async (_, __, profile, done) =>{
-    const { 
-        _json : { id, name, email}
+export const facebookCallback = async (_, __, profile, done) => {
+    const {
+        _json: { id, name, email }
     } = profile;
 
-    const user = await User.findOne({email});
-    if(user){
+    const user = await User.findOne({ email });
+    if (user) {
         user.facebookId = id;
         user.save();
         return done(null, user);
 
-    }else{
+    } else {
         const newUser = await User.create({
-            email, name, facebookId:id, avatarUrl : `https://graph.facebook.com/${id}/pciture?type=large` });
+            email, name, facebookId: id, avatarUrl: `https://graph.facebook.com/${id}/pciture?type=large`
+        });
         return done(null, newUser);
     }
 
@@ -158,25 +170,26 @@ export const postLogin = passport.authenticate("local", {
 });
 
 export const logout = (req, res) => {
+    req.flash("info", "Logged out");
     req.logout();
     res.redirect(routes.home);
 }
 
 export const getMe = (req, res) => {
-    res.render("userDetail", { pageTitle: "userDetail", user : req.user }); //req.user 는 현재 로그인된 사용자, passport가 올려줌
+    res.render("userDetail", { pageTitle: "userDetail", user: req.user }); //req.user 는 현재 로그인된 사용자, passport가 올려줌
 }
 
 export const users = (req, res) => res.render("users", { pageTitle: "users" });
 
 export const userDetail = async (req, res) => {
-    const {params : {id}} = req;
+    const { params: { id } } = req;
     try {
         //todo: populate 버그있음
         const user = await User.findById(id).populate({
-            path : 'videos',
-            model : User
+            path: 'videos',
+            model: User
         });
-        res.render("userDetail", { pageTitle: "userDetail" , user});
+        res.render("userDetail", { pageTitle: "userDetail", user });
     } catch (error) {
         res.redirect(routes.home);
     }
@@ -184,22 +197,22 @@ export const userDetail = async (req, res) => {
 
 export const postEditProfile = async (req, res) => {
     const {
-        body : { name , email }, 
-        file : { location } ,
-        user : {_id, avatarUrl}
-    
+        body: { name, email },
+        file: { location },
+        user: { _id, avatarUrl }
+
     } = req;
 
     try {
         await User.findByIdAndUpdate(
-            _id ,
-             { name, email, avatarUrl: location? location : avatarUrl }
-    );
+            _id,
+            { name, email, avatarUrl: location ? location : avatarUrl }
+        );
         res.redirect(routes.me);
     } catch (error) {
         console.log(error);
         res.render("editProfile", { pageTitle: "editProfile" });
-    }   
+    }
 
 }
 
@@ -207,21 +220,21 @@ export const getEditProfile = (req, res) => res.render("editProfile", { pageTitl
 
 export const postChangePassword = async (req, res) => {
     const {
-        body : {oldPassword , newPassword, newPassword1}
+        body: { oldPassword, newPassword, newPassword1 }
     } = req;
-    try { 
-        if(newPassword !== newPassword1){
+    try {
+        if (newPassword !== newPassword1) {
             res.status(400);
             res.redirect(`/users${routes.changePassword}`);
             return
-        }else{
+        } else {
             await req.user.chagePassword(oldPassword, newPassword); //user를 조회할 필요 없이 바로 password 변경이 가능함
         }
     } catch (error) {
         console.log(error);
         res.redirect(`/users${routes.changePassword}`);
     }
-   
+
 }
 
 export const getChangePassword = (req, res) => res.render("changePassword", { pageTitle: "changePassword" });

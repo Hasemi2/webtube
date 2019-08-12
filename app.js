@@ -15,7 +15,7 @@ import "./passport";
 import dotenv from "dotenv";
 import MongoStore from "connect-mongo";
 import Mongoose from "mongoose";
-import flash from "connect-flash";
+import flash from "express-flash";
 dotenv.config();
 
 const app = express();
