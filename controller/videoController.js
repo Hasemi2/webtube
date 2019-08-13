@@ -52,7 +52,7 @@ export const postUpload = async (req, res) => {
         creator: req.user.id
     });
 
-    req.user.videos.push(newVideo.creator);
+    req.user.videos.push(newVideo.id);
     req.user.save();
     res.redirect(routes.videoDetail(newVideo.id));
 
