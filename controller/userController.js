@@ -175,8 +175,15 @@ export const logout = (req, res) => {
     res.redirect(routes.home);
 }
 
-export const getMe = (req, res) => {
-    res.render("userDetail", { pageTitle: "userDetail", user: req.user }); //req.user 는 현재 로그인된 사용자, passport가 올려줌
+export const getMe = async (req, res) => {
+    const { user : {id} } = req;
+    try {
+        const user = await User.findById(id).populate("videos");
+        console.log("user ====> " ,  user);
+        res.render("userDetail", { pageTitle: "userDetail", user });
+    } catch (error) {
+        res.redirect(routes.home);
+    }
 }
 
 export const users = (req, res) => res.render("users", { pageTitle: "users" });
