@@ -184,8 +184,6 @@ export const postRemoveComment = async(req, res) => {
     const {
         params : {id}
     } = req;
-    console.log("req.body ==== > " , req.body);
-    console.log("id ==== > " , id);
     try {
         await Comment.findByIdAndRemove(id);
         res.status(200);
@@ -195,4 +193,23 @@ export const postRemoveComment = async(req, res) => {
     } finally {
         res.end();
     }
+}
+
+//todo : 화면단과 연결하여 테스트 필요
+//axios로 비동기 호출시 페이지 새로 고침을 해야될거같음
+export const postUpdateComment = async(req, res) => {
+    const {
+        params: {id},
+        body : {comment}
+    } = req;
+
+    try {
+        await Comment.findByIdAndUpdate(id, comment, {new : true})
+        res.status(200);
+
+    } catch (error) {
+        res.status(400);
+        console.log(error);
+    }
+
 }

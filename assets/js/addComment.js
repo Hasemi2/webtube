@@ -28,22 +28,6 @@ async function handleRemoveComment(){
     }
 }
 
-// const handleRemoveComment = async ()=> {
-//     const commentId = this.previousSibling.value;
-//     const response  = await axios({
-//         url : `/api/${commentId}/removeComment`,
-//         method : "POST",
-//     });
-
-//     if(response.status === 200){
-//        console.log("remove Comment ===> ");
-//         // removeComment(commentId);
-//     }
-
-//     console.log(response);
-// }
-
-
 //Add Comment*****************************************************************
 //페이지 새로고침 실시간 댓글 추가 기능처럼 보이는 fake 임 
 const addComment = (comment) => {
